@@ -2,18 +2,40 @@ package main
 
 import (
 	"database/sql"
+	"log"
+	"net/http"
+	"os"
 	"strconv"
+
+	"github.com/joho/godotenv"
 )
 
 var BaseDeDatos *sql.DB
 
-func ConectarALaBaseDeDatos() (db *sql.DB, err error) {
-	ControladorDeBaseDeDatos := "mysql"
-	NombreDeUsuarioDeLaBaseDeDatos := "Carlos"
-	ContraseñaDeLaBaseDeDatos := "Carlo$123"
-	NombreDeLaBaseDeDatos := "APLNDC"
+type ParámetrosDeLaBaseDeDatos struct {
+	Conductor       string
+	NombreDeUsuario string
+	Contraseña      string
+	Nombre          string
+}
 
-	return sql.Open(ControladorDeBaseDeDatos, NombreDeUsuarioDeLaBaseDeDatos+":"+ContraseñaDeLaBaseDeDatos+"@/"+NombreDeLaBaseDeDatos)
+func LeerVariablesDeEntorno() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		return
+	}
+	DatosDeLaBaseDeDatos.Conductor = os.Getenv("ControladorDeBaseDeDatos")
+	DatosDeLaBaseDeDatos.NombreDeUsuario = os.Getenv("NombreDeUsuarioDeLaBaseDeDatos")
+	DatosDeLaBaseDeDatos.Contraseña = os.Getenv("ContraseñaDeLaBaseDeDatos")
+	DatosDeLaBaseDeDatos.Nombre = os.Getenv("NombreDeLaBaseDeDatos")
+}
+
+func ConectarALaBaseDeDatos() (db *sql.DB, err error) {
+	return sql.Open(DatosDeLaBaseDeDatos.Conductor, DatosDeLaBaseDeDatos.NombreDeUsuario+":"+DatosDeLaBaseDeDatos.Contraseña+"@/"+DatosDeLaBaseDeDatos.Nombre)
+}
+
+func RegistrarSolicitudes(r *http.Request) {
+	log.Printf("%s %s %s\n\n\n", r.RemoteAddr, r.Method, r.URL)
 }
 
 //
