@@ -1,0 +1,9 @@
+APP = penguin-api
+BIN_LINUX = ./bin/$(APP)
+CMD_SRC = ./cmd/$(APP)/main.go
+
+build: 
+	go build -o $(BIN_LINUX) $(CMD_SRC)
+
+run: build
+	$(BIN_LINUX) --address 127.0.0.1 --port 8081
