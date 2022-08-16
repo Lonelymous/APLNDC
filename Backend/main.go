@@ -5,12 +5,11 @@ import (
 	"fmt"
 	"net/http"
 
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
-var Dirección string = "0.0.0.0:4000"
+var Dirección string = "0.0.0.0:4001"
 var DatosDeLaBaseDeDatos ParámetrosDeLaBaseDeDatos
 
 func EnviarRespuesta(w http.ResponseWriter, aporte any) {

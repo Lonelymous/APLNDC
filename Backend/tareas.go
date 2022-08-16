@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
 )
 
@@ -39,7 +40,7 @@ func RegistrarSolicitudes(r *http.Request) {
 }
 
 //
-func ObtenerElementosDeTareas() ([]ElementoDeTarea, error) {
+func ObtenerElementosDeTareas(sesiónIdentificaciónNúmero string) ([]ElementoDeTarea, error) {
 	resultado := make([]ElementoDeTarea, 0)
 
 	// Conectar a la base de datos.
@@ -48,16 +49,13 @@ func ObtenerElementosDeTareas() ([]ElementoDeTarea, error) {
 		return nil, err
 	}
 
-	// SELECT * FROM `Tareas`;
 	// Obtener datos de la base de datos
-	filas, err := BaseDeDatos.Query("SELECT * FROM `Tareas`;")
+	filas, err := BaseDeDatos.Query("SELECT `tareas`.`Nombre`, `tareas`.`Descripción`, `tareas`.`Prioridad`, `tareas`.`Hecho`, `tareas`.`Plazo`, `tareas`.`CreadoEn` FROM `tareas` LEFT JOIN `usuarios` ON `tareas`.`usuarioIdentificaciónNúmero` = `usuarios`.`usuarioIdentificaciónNúmero` WHERE `sesiónIdentificaciónNúmero` = '" + sesiónIdentificaciónNúmero + "';")
 	if err != nil {
 		return nil, err
 	}
 	// :)
 	for filas.Next() {
-		var TareaIdentificaciónNúmero uint
-		var UsuarioIdentificaciónNúmero uint
 		var Nombre string
 		var Descripción string
 		var Prioridad PrioridadEnum
@@ -66,8 +64,6 @@ func ObtenerElementosDeTareas() ([]ElementoDeTarea, error) {
 		var CreadoEn string
 
 		err := filas.Scan(
-			&TareaIdentificaciónNúmero,
-			&UsuarioIdentificaciónNúmero,
 			&Nombre,
 			&Descripción,
 			&Prioridad,
@@ -78,8 +74,6 @@ func ObtenerElementosDeTareas() ([]ElementoDeTarea, error) {
 			return nil, err
 		}
 		resultado = append(resultado, ElementoDeTarea{
-			TareaIdentificaciónNúmero,
-			UsuarioIdentificaciónNúmero,
 			Nombre,
 			Descripción,
 			Prioridad,

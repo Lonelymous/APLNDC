@@ -29,6 +29,15 @@ type EditorDeElementoDeUsuario struct {
 }
 
 type ElementoDeTarea struct {
+	Nombre      string        `json:"nombre"`
+	Descripción string        `json:"descripción"`
+	Prioridad   PrioridadEnum `json:"prioridad"`
+	Hecho       bool          `json:"hecho"`
+	Plazo       string        `json:"plazo"`
+	CreadoEn    string        `json:"creadoEn"`
+}
+
+type ElementoDeTarea2 struct {
 	TareaIdentificaciónNúmero   uint          `json:"tareaIdentificaciónNúmero"`
 	UsuarioIdentificaciónNúmero uint          `json:"usuarioIdentificaciónNúmero"`
 	Nombre                      string        `json:"nombre"`
@@ -52,10 +61,18 @@ func Controladores_Tareas(w http.ResponseWriter, r *http.Request) {
 	RegistrarSolicitudes(r)
 	switch r.Method {
 	case http.MethodGet:
-		resultado, err := ObtenerElementosDeTareas()
+
+		sesiónIdentificaciónNúmero := r.Header.Get("sessionId")
+		if len(sesiónIdentificaciónNúmero) != 16 {
+			fmt.Println("Invalid sesssionId")
+			http.Error(w, "Invalid sesssionId", http.StatusNotAcceptable)
+		}
+
+		resultado, err := ObtenerElementosDeTareas(sesiónIdentificaciónNúmero)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
+
 		EnviarRespuesta(w, resultado)
 	case http.MethodPost:
 		var solicitud EditorDeElementosDeTareas
