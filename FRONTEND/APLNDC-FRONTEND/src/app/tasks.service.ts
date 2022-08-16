@@ -12,15 +12,15 @@ export class TasksService {
   obtenirDesTâches(): Observable<Tâche[]> {
     let lisTâches: Tâche[] = [];
 
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+    var monEntêtes = new Headers();
+    monEntêtes.append("Content-Type", "application/json");
 
-    var requestOptions = {
+    var demandeOptions = {
       method: 'GET',
-      headers: myHeaders,
+      headers: monEntêtes,
     };
 
-    fetch("http://81.182.202.18:4000/tasks", requestOptions)
+    fetch("http://81.182.202.18:4000/tasks", demandeOptions)
       .then(response => {
         response.json().then(x => {
           let values: any[] = x;
