@@ -40,10 +40,15 @@ func main() {
 	LeerVariablesDeEntorno()
 	fmt.Println("El servidor se está ejecutando en " + Dirección + "\n\n")
 	mux := mux.NewRouter()
+
+	encabezamiento := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization", "X-Content-Type-Options"})
+	métodos := handlers.AllowedMethods([]string{"GET", "POST", "PATCH", "DELETE"})
+	orígenes := handlers.AllowedOrigins([]string{"*"})
+
 	mux.HandleFunc("/tasks", Controladores_Tareas).Methods("GET", "POST")
 	mux.HandleFunc("/tasks/{id:[0-9]+}", Controladores_Tareas_IdentificaciónNúmero).Methods("GET", "PATCH", "DELETE")
 	mux.HandleFunc("/login", Controladores_IniciarSesión).Methods("POST")
 	// mux.HandleFunc("/register", Controladores_Registro).Methods("POST")
-	http.ListenAndServe(Dirección, handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"}), handlers.AllowedOrigins([]string{"*"}))(mux))
+	http.ListenAndServe(Dirección, handlers.CORS(encabezamiento, métodos, orígenes)(mux))
 
 }

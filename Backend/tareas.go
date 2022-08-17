@@ -1,11 +1,14 @@
 package main
 
 import (
-	"database/sql"
+	"os"
+
 	"log"
 	"net/http"
-	"os"
+
 	"strconv"
+
+	"database/sql"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
