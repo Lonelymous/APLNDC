@@ -20,9 +20,27 @@ export class TasksService {
       headers: monEntêtes,
     };
 
+    /*valeurs de test*/
+    let tâcheNouveau: Tâche = {
+      TâcheIdentificationNuméro: 0,
+      UtilisateurIdentificationNuméro: 0,
+      Nom: "aaaaaaaaaaaaaaaaaaa",
+      Description: "Lorem ipsum suck my balls and nuts :))))",
+      Priorité: PrioritéEnum.Critical,
+      Fini: true,
+      Terme: new Date(),
+      CrééEn: new Date()
+    } 
+    
+    for(let i = 0; i < 10; i++){
+      lisTâches.push(tâcheNouveau);
+    }
+
     fetch("http://81.182.202.18:4000/tasks", demandeOptions)
       .then(response => {
         response.json().then(x => {
+          lisTâches = [];
+
           let values: any[] = x;
 
           for (let i = 0; i < values.length; i++) {
@@ -43,7 +61,8 @@ export class TasksService {
         })
       })
       .then(result => console.log(result))
-      .catch(error => console.log('error', error));
+      .catch(error => {
+      });
 
     return of(lisTâches);
   }
